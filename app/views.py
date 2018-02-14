@@ -63,41 +63,86 @@ def delete(record_id):
         business_id = record_id
         user = BusinessRegistration.query.filter_by(business_id=business_id).first()
         ownerid = user.business_owner_id
-
-        if ownerid==session['user']:
+        if session['user']!=None:
+            if ownerid==session['user']:
             # delete_this = BusinessRegistration.query.filter_by(business_id=business_id).first()
 
-            if user:
-                db.session.delete(user)
-                db.session.commit()
-                return redirect(url_for('registeredbusinesses'))
+                if user:
+                    db.session.delete(user)
+                    db.session.commit()
+                    return redirect(url_for('registeredbusinesses'))
+                else:
+                    return 'Record doesnt exist'
             else:
-                return 'Record doesnt exist'
+                flash('You do not have enough privileges to delete this record')
+                return redirect(url_for('registeredbusinesses'))
         else:
-            flash('You do not have enough priveledges to delete this record')
-            return redirect(url_for('addbusiness'))
+            flash('You need to login to delete!')
+            return redirect(url_for('registeredbusinesses'))
     else:
         return 'Failed to delete record'
-@app.route('/details/<record_id>',methods=['GET','POST'])
-def details(record_id):
-    if request.method=='GET':
-        details_for = Signup.query.filter_by(username=record_id).first()
-        if details_for:
-            return render_template('details.html',details_for =details_for)
-        else:
-            return 'The record doesnt exist'
-    else:
-        return 'Failed to view the details of the record'
 @app.route('/edit/<record_id>', methods=['GET','POST'])
 def edit(record_id):
+    business_registration_form = BusinessRegistrationForm()
     if request.method=='GET':
-        details_for = Signup.query.filter_by(username=record_id)
-        if details_for:
-            return  render_template('details.html', details_for=details_for)
+        business_id = record_id
+
+        user = BusinessRegistration.query.filter_by(business_id=business_id).first()
+        ownerid = user.business_owner_id
+        if session['user']!=None:
+            if ownerid==session['user']:
+                if user:
+                    business_registration_form.business_name.data= user.businessname
+                    business_registration_form.business_street_address.data = user.business_street_address
+                    business_registration_form.business_country.data = user.business_country
+                    business_registration_form.business_city.data = user.business_city
+                    business_registration_form.contact_number.data = user.contact_number
+                    business_registration_form.email.data = user.email
+                    business_registration_form.firstname.data = user.firstname
+                    business_registration_form.lastname.data = user.lastname
+                    business_registration_form.nominalcapital.data = user.nominalcapital
+                    business_registration_form.business_category.data = user.business_cateogory
+
+                    return render_template('edit.html', business_registration_form=business_registration_form, user=user)
+                else:
+                    return 'Record doesnt exist'
+            else:
+                flash('You do not have enough privileges to edit this record')
+                return redirect(url_for('registeredbusinesses'))
         else:
-            return 'The record doesnt exist'
-    if request.method=='POST':
-        pass
+            flash('You need to login to edit!')
+            return redirect(url_for('registeredbusinesses'))
+    elif request.method=='POST':
+        business_name = business_registration_form.business_name.data
+        business_street_address = business_registration_form.business_street_address.data
+        business_country = business_registration_form.business_country.data
+        business_city = business_registration_form.business_city.data
+        contact_number = business_registration_form.contact_number.data
+        email = business_registration_form.email.data
+        firstname = business_registration_form.firstname.data
+        lastname = business_registration_form.lastname.data
+        nominal_capital = business_registration_form.nominalcapital.data
+        business_category = business_registration_form.business_category.data
+        business_id = record_id
+        update_this = BusinessRegistration.query.filter_by(business_id=business_id).first()
+        if update_this:
+            update_this.businessname =business_name
+            update_this.business_street_address = business_street_address
+            update_this.business_country = business_country
+            update_this.business_city = business_city
+            update_this.contact_number = contact_number
+            update_this.email = email
+            update_this.firstname = firstname
+            update_this.lastname = lastname
+            update_this.nominal_capital = nominal_capital
+            update_this.business_category = business_category
+            db.session.commit()
+            flash('Record updated successfully')
+            return redirect(url_for('registeredbusinesses'))
+        else:
+            flash('Record doesnt exist')
+            return redirect(url_for('registeredbusinesses'))
+
 @app.route('/addbusiness', methods=['GET','POST'])
 def addbusiness():
     business_registration_form = BusinessRegistrationForm()

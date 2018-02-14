@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EDIT BUSINESS</title>
+</head>
+<body>
+  <div class="container">
+<form method="post" >
+{{ message }}<br>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.business_name.label }}<br>
+         {{ business_registration_form.business_name(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.business_street_address.label }}<br>
+         {{ business_registration_form.business_street_address(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.business_country.label }}<br>
+         {{ business_registration_form.business_country(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.business_city.label }}<br>
+         {{ business_registration_form.business_city(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.contact_number.label }}<br>
+         {{ business_registration_form.contact_number(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+          {{ business_registration_form.email.label }}<br>
+          {{ business_registration_form.email(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.firstname.label }}<br>
+         {{ business_registration_form.firstname(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.lastname.label }}<br>
+         {{ business_registration_form.lastname(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+         {{ business_registration_form.nominalcapital.label }}<br>
+         {{ business_registration_form.nominalcapital(class='form-control') }}<br>
+     </div>
+
+     <div class="col-sm-9">
+          {{ business_registration_form.business_category.label }}<br>
+          {{ business_registration_form.business_category(class='form-control') }}<br>
+     </div>
+     <div class="col-sm-9">
+         <button type="submit" class="btn btn-lg btn-primary btn-block">Update</button>
+     </div>
+</form>
+    </div>
+</body>
+</html>
