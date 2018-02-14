@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextField, PasswordField, SubmitField, RadioField, FloatField, SelectField
+from wtforms import StringField, IntegerField, TextField, PasswordField, SubmitField, RadioField, FloatField, SelectField,BooleanField
 from wtforms.validators import  EqualTo, Email, Length,InputRequired
 
 class signupform(FlaskForm):
@@ -16,7 +16,7 @@ class signupform(FlaskForm):
 class Loginform(FlaskForm):
     Username = StringField('Username:', validators=[InputRequired()])
     Password = PasswordField('Password:',validators=[InputRequired()])
-    remember = RadioField('Rememberme', choices=[('remeber_me','Remember me')])
+    remember = BooleanField('Rememberme')
     submit = SubmitField('Login')
 #class EditForm(FlaskForm):
 

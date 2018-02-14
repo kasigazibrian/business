@@ -1,44 +1,5 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div>
-    <a href="{{ url_for('signup') }}"> Create New</a>
-    <br/>
 
-    <label>{{ message }}</label>
-
-    <table class="table table-striped table-bordered">
-
-
-
-        <tr>
-            <th width="15%">FIRST NAME</th>
-            <th width="15%">LAST NAME</th>
-            <th width="15%">USERNAME</th>
-            <th width="15%">PASSWORD</th>
-            <th width="15%">PHONE NUMBER</th>
-            <th width="15%">EMAIL</th>
-            <th width="15%">GENDER</th>
-
-        </tr>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.firstname }}</td>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.password }}</td>
-            <td>{{ user.phonenumber }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.gender }}</td>
-            <td><a href="{{ url_for("details", record_id= user.username) }}">Details</a></td>
-            <td><a href="{{ url_for("delete", record_id= user.username) }}">Delete</a></td>
-            <td><a href="{{ url_for("edit", record_id= user.username) }}">Edit</a></td>
-        </tr>
-       {% endfor %}
-
-
-
-
-     </table>
-</div>
 {% endblock %}

@@ -1,5 +1,5 @@
 
-from flask import render_template, url_for, redirect, request
+from flask import render_template, url_for, redirect, request, session, redirect
 
 from app import *
 
@@ -10,14 +10,15 @@ db.create_all()
 @app.route('/home', methods=['GET','POST'])
 def home():
     if request.method=='GET':
-        allusers = Signup.query.all()
+        allusers = BusinessRegistration.query.all()
         return render_template("index.html", users=allusers)
 @app.route('/login',methods=['GET','POST'])
 def login():
     log = Loginform()
+
     if request.method=='GET':
         return render_template('login.html', form=log)
-    elif request.method=='POST' and log.validate():
+    elif request.method=='POST':
         Username = log.Username.data
         password = log.Password.data
         message = 'INVALID USERNAME OR PASSWORD'
@@ -25,7 +26,9 @@ def login():
         user = Login.query.filter_by(username=Username).first()
         if user:
             if(user.password == password):
-                return render_template('index.html', message=message1)
+                session['user'] = user.id
+                return redirect(url_for('addbusiness'))
+
             else:
                 return render_template('login.html',form=log, message=message)
         else:
@@ -37,7 +40,7 @@ def signup():
     sign = signupform()
     if request.method=='GET':
         return render_template('signup.html',form=sign)
-    elif request.method=='POST' and sign.validate_on_submit():
+    elif request.method=='POST':
         Firstname = sign.Firstname.data
         Lastname = sign.lastname.data
         Username = sign.Username.data
@@ -91,8 +94,29 @@ def edit(record_id):
 def addbusiness():
     business_registration_form = BusinessRegistrationForm()
     if request.method=='GET':
-        return render_template('createbusiness.html',business_registration_form=business_registration_form )
+        return render_template('addbusiness.html', business_registration_form=business_registration_form)
     elif request.method =='POST':
-        pass
+        business_name = business_registration_form.business_name.data
+        business_street_address = business_registration_form.business_street_address.data
+        business_country = business_registration_form.business_country.data
+        business_city = business_registration_form.business_city.data
+        contact_number = business_registration_form.contact_number.data
+        email = business_registration_form.email.data
+        firstname = business_registration_form.firstname.data
+        lastname = business_registration_form.lastname.data
+        nominal_capital = business_registration_form.nominalcapital.data
+        business_category = business_registration_form.business_category.data
+        user_id = session['user']
+        business_info = BusinessRegistration(businessname=business_name,business_street_address=business_street_address,business_city=business_city,business_country=business_country,
+                                             contact_number=contact_number,email=email,firstname=firstname,lastname=lastname,nominalcapital=nominal_capital,business_category=business_category, business_owner_id=user_id)
+        db.session.add(business_info)
+        db.session.commit()
+        return 'successfullyadded'
+
     else:
         return 'WRONG REQUEST'
+@app.route('/registeredbusinesses', methods=['POST','GET'])
+def registeredbusinesses():
+    businesses = BusinessRegistration.query.all()
+    if request.method=='GET':
+        return render_template('registeredbusinesses.html',businesses=businesses)
