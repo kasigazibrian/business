@@ -1,5 +1,5 @@
 
-from flask import render_template, url_for, redirect, request, session, redirect
+from flask import render_template, url_for, redirect, request, session, redirect, flash
 
 from app import *
 
@@ -61,20 +61,21 @@ def signup():
 def delete(record_id):
     if request.method=='GET':
         business_id = record_id
-        user = Login.query.filter_by(id = session['user']).first()
-        userid = user.business_owner.first()
-        businessowner = userid.business_owner_id
-        if business_id==businessowner:
-            delete_this = BusinessRegistration.query.filter_by(business_id=business_id).first()
+        user = BusinessRegistration.query.filter_by(business_id=business_id).first()
+        ownerid = user.business_owner_id
 
-            if delete_this:
-                db.session.delete(delete_this)
+        if ownerid==session['user']:
+            # delete_this = BusinessRegistration.query.filter_by(business_id=business_id).first()
+
+            if user:
+                db.session.delete(user)
                 db.session.commit()
                 return redirect(url_for('registeredbusinesses'))
             else:
                 return 'Record doesnt exist'
         else:
-            return 'You do not have enough priveledges to delete this record'
+            flash('You do not have enough priveledges to delete this record')
+            return redirect(url_for('addbusiness'))
     else:
         return 'Failed to delete record'
 @app.route('/details/<record_id>',methods=['GET','POST'])
