@@ -27,7 +27,7 @@ def login():
         if user:
             if(user.password == password):
                 session['user'] = user.id
-                return redirect(url_for('addbusiness'))
+                return redirect(url_for('registeredbusinesses'))
 
             else:
                 return render_template('login.html',form=log, message=message)
@@ -60,14 +60,21 @@ def signup():
 @app.route('/delete/<record_id>', methods=['GET','POST'])
 def delete(record_id):
     if request.method=='GET':
-        Username = record_id
-        delete_this = Signup.query.filter_by(username=Username).first()
-        if delete_this:
-            db.session.delete(delete_this)
-            db.session.commit()
-            return redirect(url_for('home'))
+        business_id = record_id
+        user = Login.query.filter_by(id = session['user']).first()
+        userid = user.business_owner.first()
+        businessowner = userid.business_owner_id
+        if session['user']==businessowner:
+            delete_this = BusinessRegistration.query.filter_by(business_id=business_id).first()
+
+            if delete_this:
+                db.session.delete(delete_this)
+                db.session.commit()
+                return redirect(url_for('registeredbusinesses'))
+            else:
+                return 'Record doesnt exist'
         else:
-            return 'Record doesnt exist'
+            return 'You do not have enough priveledges to delete this record'
     else:
         return 'Failed to delete record'
 @app.route('/details/<record_id>',methods=['GET','POST'])
