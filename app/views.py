@@ -64,7 +64,7 @@ def delete(record_id):
         user = Login.query.filter_by(id = session['user']).first()
         userid = user.business_owner.first()
         businessowner = userid.business_owner_id
-        if session['user']==businessowner:
+        if business_id==businessowner:
             delete_this = BusinessRegistration.query.filter_by(business_id=business_id).first()
 
             if delete_this:
