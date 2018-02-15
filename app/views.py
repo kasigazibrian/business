@@ -25,18 +25,19 @@ def login():
     elif request.method=='POST':
         Username = log.Username.data
         password = log.Password.data
-        message = 'INVALID USERNAME OR PASSWORD'
-        message1 ='You have successfully logged in!'
         user = Login.query.filter_by(username=Username).first()
         if user:
             if(user.password == password):
+                flash('You have successfully logged in!')
                 session['user'] = user.id
                 return redirect(url_for('registeredbusinesses'))
 
             else:
-                return render_template('login.html',form=log, message=message)
+                flash('INVALID USERNAME OR PASSWORD')
+                return render_template('login.html',form=log)
         else:
-            return render_template('login.html',form =log, message=message)
+            flash('INVALID USERNAME OR PASSWORD')
+            return render_template('login.html',form =log)
     else:
         return  'WRONG REQUEST'
 @app.route('/signup',methods=['GET','POST'])
