@@ -10,14 +10,18 @@ db.create_all()
 @app.route('/home', methods=['GET','POST'])
 def home():
     if request.method=='GET':
-        allusers = BusinessRegistration.query.all()
-        return render_template("index.html", users=allusers)
+
+        return render_template("index.html", title='We Care!')
+    elif request.method=='POST':
+        return redirect(url_for('registeredbusinesses'))
+    else:
+        return 'WRONG REQUEST'
 @app.route('/login',methods=['GET','POST'])
 def login():
     log = Loginform()
 
     if request.method=='GET':
-        return render_template('login.html', form=log)
+        return render_template('login.html', form=log, title='Login!')
     elif request.method=='POST':
         Username = log.Username.data
         password = log.Password.data
@@ -39,7 +43,7 @@ def login():
 def signup():
     sign = signupform()
     if request.method=='GET':
-        return render_template('signup.html',form=sign)
+        return render_template('signup.html',form=sign, title='SignUp')
     elif request.method=='POST':
         Firstname = sign.Firstname.data
         Lastname = sign.lastname.data
