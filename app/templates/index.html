@@ -2,6 +2,17 @@
 {% block content %}
     <div class="container">
  <form method="post">
+ <div class="form-group row">
+      {% with messages = get_flashed_messages() %}
+         {% if messages %}
+            <ul class='alert alert-danger'>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+             </ul>
+         {% endif %}
+      {% endwith %}
+ </div>
 <div class="jumbotron">
   <h1 class="display-3">Hello, {{ name|capitalize }}!</h1>
   <p class="lead">This is a simple business advertising company, a simple jumbotron-style component for calling extra attention to featured content or information.</p>

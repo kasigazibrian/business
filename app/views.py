@@ -11,7 +11,7 @@ db.create_all()
 def home():
     if request.method=='GET':
 
-        return render_template("index.html", title='We Care!')
+        return render_template("index.html", title='We Care!', button='Login')
     elif request.method=='POST':
         return redirect(url_for('registeredbusinesses'))
     else:
@@ -40,6 +40,12 @@ def login():
             return render_template('login.html',form =log)
     else:
         return  'WRONG REQUEST'
+@app.route('/logout', methods=['GET','POST'])
+def logout():
+    if request.method=='GET':
+        flash('You have successfully logged out')
+        return redirect(url_for('home'))
+
 @app.route('/signup',methods=['GET','POST'])
 def signup():
     sign = signupform()
@@ -60,7 +66,7 @@ def signup():
         db.session.commit()
         return 'Successfully signed up'
     else:
-        return render_template('signup.html',form=sign);
+        return render_template('signup.html',form=sign, button='Login');
 
 @app.route('/delete/<record_id>', methods=['GET','POST'])
 def delete(record_id):
@@ -108,7 +114,7 @@ def edit(record_id):
                     business_registration_form.nominalcapital.data = user.nominalcapital
                     business_registration_form.business_category.data = user.business_cateogory
 
-                    return render_template('edit.html', business_registration_form=business_registration_form, user=user)
+                    return render_template('edit.html', business_registration_form=business_registration_form, user=user,button='Logout')
                 else:
                     return 'Record doesnt exist'
             else:
@@ -152,7 +158,7 @@ def edit(record_id):
 def addbusiness():
     business_registration_form = BusinessRegistrationForm()
     if request.method=='GET':
-        return render_template('addbusiness.html', business_registration_form=business_registration_form)
+        return render_template('addbusiness.html', business_registration_form=business_registration_form, button='Logout')
     elif request.method =='POST':
         business_name = business_registration_form.business_name.data
         business_street_address = business_registration_form.business_street_address.data
@@ -177,4 +183,4 @@ def addbusiness():
 def registeredbusinesses():
     businesses = BusinessRegistration.query.all()
     if request.method=='GET':
-        return render_template('registeredbusinesses.html',businesses=businesses)
+        return render_template('registeredbusinesses.html',businesses=businesses, button='Logout')
