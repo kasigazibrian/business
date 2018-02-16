@@ -184,3 +184,7 @@ def registeredbusinesses():
     businesses = BusinessRegistration.query.all()
     if request.method=='GET':
         return render_template('registeredbusinesses.html',businesses=businesses, button='Logout')
+@app.route('/testing', methods=['POST','GET'])
+def testing():
+    if request.method=='GET':
+        return render_template('testing.html')
